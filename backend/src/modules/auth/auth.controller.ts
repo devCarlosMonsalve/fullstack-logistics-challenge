@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseGuards, Get } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LoginUseCase } from './application/use-cases/login.use-case';
 import { RegisterUserUseCase } from './application/use-cases/register-user.use-case';
@@ -14,18 +14,13 @@ export class AuthController {
     private readonly registerUserUseCase: RegisterUserUseCase,
   ) {}
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('SUPERVISOR')
-  @Get('test')
-  test(){
-    return { message: 'Authenticated successfully' };
-  }
-
   @Post('login')
   async login(@Body() body: LoginDto) {
     return this.loginUseCase.execute(body);
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('SUPERVISOR')
   @Post('register')
   async register(@Body() body: RegisterUserDto) {
     return this.registerUserUseCase.execute(body);
