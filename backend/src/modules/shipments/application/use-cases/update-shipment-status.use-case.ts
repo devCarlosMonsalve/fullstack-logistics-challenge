@@ -15,10 +15,24 @@ interface UpdateShipmentStatusInput {
 }
 
 const allowedTransitions: Record<ShipmentStatus, ShipmentStatus[]> = {
-    [ShipmentStatus.CREATED]: [ShipmentStatus.IN_WAREHOUSE, ShipmentStatus.CANCELLED],
-    [ShipmentStatus.IN_WAREHOUSE]: [ShipmentStatus.IN_TRANSIT, ShipmentStatus.CANCELLED],
-    [ShipmentStatus.IN_TRANSIT]: [ShipmentStatus.OUT_FOR_DELIVERY, ShipmentStatus.RETURNED],
-    [ShipmentStatus.OUT_FOR_DELIVERY]: [ShipmentStatus.DELIVERED, ShipmentStatus.RETURNED],
+    [ShipmentStatus.CREATED]: [
+        ShipmentStatus.IN_WAREHOUSE,
+        ShipmentStatus.CANCELLED,
+    ],
+    [ShipmentStatus.IN_WAREHOUSE]: [
+        ShipmentStatus.IN_TRANSIT,
+        ShipmentStatus.CANCELLED,
+    ],
+    [ShipmentStatus.IN_TRANSIT]: [
+        ShipmentStatus.OUT_FOR_DELIVERY,
+        ShipmentStatus.RETURNED,
+        ShipmentStatus.CANCELLED,
+    ],
+    [ShipmentStatus.OUT_FOR_DELIVERY]: [
+        ShipmentStatus.DELIVERED,
+        ShipmentStatus.RETURNED,
+        ShipmentStatus.CANCELLED,
+    ],
     [ShipmentStatus.DELIVERED]: [],
     [ShipmentStatus.RETURNED]: [],
     [ShipmentStatus.CANCELLED]: [],

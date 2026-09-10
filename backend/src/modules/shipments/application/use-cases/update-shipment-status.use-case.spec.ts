@@ -74,4 +74,63 @@ describe('UpdateShipmentStatusUseCase', () => {
 
         expect(shipmentEventRepository.create).toHaveBeenCalled();
     });
+
+    it('should allow cancellation from IN_TRANSIT', async () => {
+        const shipment = new Shipment(
+            'shipment-2',
+            'ENV-20260911-TEST',
+            'Madrid',
+            'Barcelona',
+            'Carlos Test',
+            null,
+            5.5,
+            ShipmentStatus.IN_TRANSIT,
+            null,
+            'user-1',
+            new Date(),
+            new Date(),
+        );
+
+        shipmentRepository.findById.mockResolvedValue(shipment);
+
+        await useCase.execute({
+            id: 'shipment-2',
+            status: ShipmentStatus.CANCELLED,
+            userId: 'user-1',
+        });
+
+        expect(shipmentRepository.update).toHaveBeenCalledWith(shipment);
+        expect(shipmentEventRepository.create).toHaveBeenCalled();
+        expect(shipment.status).toBe(ShipmentStatus.CANCELLED);
+    });
+
+    it('should reject cancellation of a DELIVERED shipment', async () => {
+        const shipment = new Shipment(
+            'shipment-3',
+            'ENV-20260911-TEST',
+            'Madrid',
+            'Barcelona',
+            'Carlos Test',
+            null,
+            5.5,
+            ShipmentStatus.DELIVERED,
+            new Date(),
+            'user-1',
+            new Date(),
+            new Date(),
+        );
+
+        shipmentRepository.findById.mockResolvedValue(shipment);
+
+        await expect(
+            useCase.execute({
+            id: 'shipment-3',
+            status: ShipmentStatus.CANCELLED,
+            userId: 'user-1',
+            }),
+        ).rejects.toThrow();
+
+        expect(shipmentRepository.update).not.toHaveBeenCalled();
+        expect(shipmentEventRepository.create).not.toHaveBeenCalled();
+    });
 });

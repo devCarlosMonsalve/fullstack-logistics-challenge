@@ -17,6 +17,7 @@ import { AssignVehiclesUseCase } from './application/use-cases/assign-vehicles.u
 import { CancelShipmentUseCase } from './application/use-cases/cancel-shipment.use-case';
 import { GetPublicTrackingUseCase } from './application/use-cases/get-public-tracking.use-case';
 import { ShipmentsController } from './shipments.controller';
+import { TrackingController } from './tracking.controller';
 import { AuthModule } from '../auth/auth.module';
 
 @Module({
@@ -39,7 +40,7 @@ import { AuthModule } from '../auth/auth.module';
     CancelShipmentUseCase,
     GetPublicTrackingUseCase,
   ],
-  controllers: [ShipmentsController],
+  controllers: [ShipmentsController, TrackingController],
   exports: [SHIPMENT_REPOSITORY, SHIPMENT_EVENT_REPOSITORY],
 })
 export class ShipmentsModule {}

@@ -7,7 +7,7 @@ export const toDomain = (prismaShipment: {
   origin: string;
   destination: string;
   recipient: string;
-  phone: string;
+  phone: string | null;
   weight: { toNumber(): number };
   status: string;
   deliveredAt: Date | null;
@@ -38,7 +38,7 @@ export const toPrisma = (shipment: Shipment) => {
     origin: shipment.origin,
     destination: shipment.destination,
     recipient: shipment.recipient,
-    phone: shipment.phone,
+    phone: shipment.phone ?? null,
     weight: shipment.weight,
     status: shipment.status,
     deliveredAt: shipment.deliveredAt,

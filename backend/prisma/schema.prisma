@@ -47,7 +47,7 @@ model Shipment {
   origin       String
   destination  String
   recipient    String
-  phone        String
+  phone        String?
   weight       Decimal        @db.Decimal(10, 2)
   status       ShipmentStatus @default(CREATED)
   deliveredAt  DateTime?

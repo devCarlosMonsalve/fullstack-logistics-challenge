@@ -21,7 +21,7 @@ interface CreateShipmentInput {
   origin: string;
   destination: string;
   recipient: string;
-  phone: string;
+  phone?: string;
   weight: number;
   createdById: string;
 }
@@ -50,7 +50,7 @@ export class CreateShipmentUseCase {
       input.origin,
       input.destination,
       input.recipient,
-      input.phone,
+      input.phone ?? null,
       input.weight,
       ShipmentStatus.CREATED,
       null,

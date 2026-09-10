@@ -2,6 +2,7 @@ import {
     IsNotEmpty,
     IsString,
     IsNumber,
+    IsOptional,
     Min,
 } from 'class-validator';
 
@@ -18,9 +19,9 @@ export class CreateShipmentDto {
   @IsString()
   recipient: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  phone: string;
+  phone?: string;
 
   @IsNumber()
   @Min(0)

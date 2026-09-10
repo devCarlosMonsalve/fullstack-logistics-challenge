@@ -22,8 +22,6 @@ import { UpdateShipmentStatusDto } from './application/dto/update-shipment-statu
 import { AssignVehiclesUseCase } from './application/use-cases/assign-vehicles.use-case';
 import { AssignVehiclesDto } from './application/dto/assign-vehicles.dto';
 import { CancelShipmentUseCase } from './application/use-cases/cancel-shipment.use-case';
-import { GetPublicTrackingUseCase } from './application/use-cases/get-public-tracking.use-case';
-
 
 @Controller('shipments')
 export class ShipmentsController {
@@ -34,7 +32,6 @@ export class ShipmentsController {
         private readonly updateShipmentStatusUseCase: UpdateShipmentStatusUseCase,
         private readonly assignVehiclesUseCase: AssignVehiclesUseCase,
         private readonly cancelShipmentUseCase: CancelShipmentUseCase,
-        private readonly getPublicTrackingUseCase: GetPublicTrackingUseCase,
     ) {}
 
     @UseGuards(JwtAuthGuard)
@@ -69,11 +66,6 @@ export class ShipmentsController {
             limit: query.limit,
             status: query.status,
         });
-    }
-
-    @Get('tracking/:trackingCode')
-    async publicTracking(@Param('trackingCode') trackingCode: string) {
-        return this.getPublicTrackingUseCase.execute(trackingCode);
     }
 
     @UseGuards(JwtAuthGuard)

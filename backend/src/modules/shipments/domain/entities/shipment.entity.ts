@@ -6,7 +6,7 @@ export class Shipment {
   origin: string;
   destination: string;
   recipient: string;
-  phone: string;
+  phone: string | null;
   weight: number;
   status: ShipmentStatus;
   deliveredAt: Date | null;
@@ -20,7 +20,7 @@ export class Shipment {
     origin: string,
     destination: string,
     recipient: string,
-    phone: string,
+    phone: string | null,
     weight: number,
     status: ShipmentStatus,
     deliveredAt: Date | null,
