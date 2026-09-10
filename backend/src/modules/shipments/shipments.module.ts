@@ -11,6 +11,7 @@ import { PrismaShipmentEventRepository } from './infrastructure/repositories/pri
 import { CreateShipmentUseCase } from './application/use-cases/create-shipment.use-case';
 import { ListShipmentsUseCase } from './application/use-cases/list-shipments.use-case';
 import { GetShipmentUseCase } from './application/use-cases/get-shipment.use-case';
+import { UpdateShipmentStatusUseCase } from './application/use-cases/update-shipment-status.use-case';
 import { ShipmentsController } from './shipments.controller';
 import { AuthModule } from '../auth/auth.module';
 
@@ -28,6 +29,7 @@ import { AuthModule } from '../auth/auth.module';
     CreateShipmentUseCase,
     ListShipmentsUseCase,
     GetShipmentUseCase,
+    UpdateShipmentStatusUseCase,
   ],
   controllers: [ShipmentsController],
   exports: [SHIPMENT_REPOSITORY, SHIPMENT_EVENT_REPOSITORY],

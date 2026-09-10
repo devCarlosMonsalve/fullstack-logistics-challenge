@@ -6,6 +6,7 @@ import {
     Req,
     UseGuards,
     Param,
+    Patch,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { Query } from '@nestjs/common';
@@ -15,6 +16,8 @@ import { ListShipmentsQueryDto } from './application/dto/list-shipments-query.dt
 import { ListShipmentsUseCase } from './application/use-cases/list-shipments.use-case';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { GetShipmentUseCase } from './application/use-cases/get-shipment.use-case';
+import { UpdateShipmentStatusUseCase } from './application/use-cases/update-shipment-status.use-case';
+import { UpdateShipmentStatusDto } from './application/dto/update-shipment-status.dto';
 
 @Controller('shipments')
 export class ShipmentsController {
@@ -22,6 +25,7 @@ export class ShipmentsController {
         private readonly createShipmentUseCase: CreateShipmentUseCase,
         private readonly listShipmentsUseCase: ListShipmentsUseCase,
         private readonly getShipmentUseCase: GetShipmentUseCase,
+        private readonly updateShipmentStatusUseCase: UpdateShipmentStatusUseCase,
     ) {}
 
     @UseGuards(JwtAuthGuard)
@@ -51,5 +55,21 @@ export class ShipmentsController {
     @Get(':id')
     async findOne(@Param('id') id: string) {
         return this.getShipmentUseCase.execute(id);
+    }
+    
+    @UseGuards(JwtAuthGuard)
+    @Patch(':id/status')
+    async updateStatus(
+        @Param('id') id: string,
+        @Body() body: UpdateShipmentStatusDto,
+        @Req() request: Request & { user: { sub: string } },
+    ) {
+        return this.updateShipmentStatusUseCase.execute({
+            id,
+            status: body.status,
+            userId: request.user.sub,
+            location: body.location,
+            notes: body.notes,
+        });
     }
 }
