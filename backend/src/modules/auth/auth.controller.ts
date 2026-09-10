@@ -4,6 +4,8 @@ import { LoginUseCase } from './application/use-cases/login.use-case';
 import { RegisterUserUseCase } from './application/use-cases/register-user.use-case';
 import { RegisterUserDto } from './application/dto/register-user.dto';
 import { LoginDto } from './application/dto/login.dto';
+import { RolesGuard } from './guards/roles.guard';
+import { Roles } from './decorators/roles.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -12,7 +14,8 @@ export class AuthController {
     private readonly registerUserUseCase: RegisterUserUseCase,
   ) {}
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('SUPERVISOR')
   @Get('test')
   test(){
     return { message: 'Authenticated successfully' };
