@@ -7,6 +7,7 @@ import {
     UseGuards,
     Param,
     Patch,
+    Delete,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { Query } from '@nestjs/common';
@@ -20,6 +21,7 @@ import { UpdateShipmentStatusUseCase } from './application/use-cases/update-ship
 import { UpdateShipmentStatusDto } from './application/dto/update-shipment-status.dto';
 import { AssignVehiclesUseCase } from './application/use-cases/assign-vehicles.use-case';
 import { AssignVehiclesDto } from './application/dto/assign-vehicles.dto';
+import { CancelShipmentUseCase } from './application/use-cases/cancel-shipment.use-case';
 
 
 @Controller('shipments')
@@ -30,6 +32,7 @@ export class ShipmentsController {
         private readonly getShipmentUseCase: GetShipmentUseCase,
         private readonly updateShipmentStatusUseCase: UpdateShipmentStatusUseCase,
         private readonly assignVehiclesUseCase: AssignVehiclesUseCase,
+        private readonly cancelShipmentUseCase: CancelShipmentUseCase,
     ) {}
 
     @UseGuards(JwtAuthGuard)
@@ -85,6 +88,18 @@ export class ShipmentsController {
             userId: request.user.sub,
             location: body.location,
             notes: body.notes,
+        });
+    }
+    
+    @UseGuards(JwtAuthGuard)
+    @Delete(':id')
+    async cancel(
+        @Param('id') id: string,
+        @Req() request: Request & { user: { sub: string } },
+    ) {
+        return this.cancelShipmentUseCase.execute({
+            id,
+            userId: request.user.sub,
         });
     }
 }
