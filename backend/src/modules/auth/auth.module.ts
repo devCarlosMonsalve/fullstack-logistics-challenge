@@ -17,6 +17,6 @@ import { RegisterUserUseCase } from './application/use-cases/register-user.use-c
   }), UsersModule],
   controllers: [AuthController],
   providers: [LoginUseCase, RegisterUserUseCase],
-  exports: [LoginUseCase, RegisterUserUseCase],
+  exports: [JwtModule, LoginUseCase, RegisterUserUseCase],
 })
 export class AuthModule {}
