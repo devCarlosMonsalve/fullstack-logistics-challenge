@@ -18,6 +18,9 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { GetShipmentUseCase } from './application/use-cases/get-shipment.use-case';
 import { UpdateShipmentStatusUseCase } from './application/use-cases/update-shipment-status.use-case';
 import { UpdateShipmentStatusDto } from './application/dto/update-shipment-status.dto';
+import { AssignVehiclesUseCase } from './application/use-cases/assign-vehicles.use-case';
+import { AssignVehiclesDto } from './application/dto/assign-vehicles.dto';
+
 
 @Controller('shipments')
 export class ShipmentsController {
@@ -26,6 +29,7 @@ export class ShipmentsController {
         private readonly listShipmentsUseCase: ListShipmentsUseCase,
         private readonly getShipmentUseCase: GetShipmentUseCase,
         private readonly updateShipmentStatusUseCase: UpdateShipmentStatusUseCase,
+        private readonly assignVehiclesUseCase: AssignVehiclesUseCase,
     ) {}
 
     @UseGuards(JwtAuthGuard)
@@ -38,6 +42,17 @@ export class ShipmentsController {
         return this.createShipmentUseCase.execute({
             ...body,
             createdById: user.sub,
+        });
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Post('assign-vehicles')
+    async assignVehicles(
+        @Body() body: AssignVehiclesDto,
+    ) {
+        return this.assignVehiclesUseCase.execute({
+            shipmentIds: body.shipmentIds,
+            vehicleCapacity: body.vehicleCapacity,
         });
     }
 

@@ -12,6 +12,8 @@ import { CreateShipmentUseCase } from './application/use-cases/create-shipment.u
 import { ListShipmentsUseCase } from './application/use-cases/list-shipments.use-case';
 import { GetShipmentUseCase } from './application/use-cases/get-shipment.use-case';
 import { UpdateShipmentStatusUseCase } from './application/use-cases/update-shipment-status.use-case';
+import { FirstFitDecreasingService } from './domain/services/first-fit-decreasing.service';
+import { AssignVehiclesUseCase } from './application/use-cases/assign-vehicles.use-case';
 import { ShipmentsController } from './shipments.controller';
 import { AuthModule } from '../auth/auth.module';
 
@@ -30,6 +32,8 @@ import { AuthModule } from '../auth/auth.module';
     ListShipmentsUseCase,
     GetShipmentUseCase,
     UpdateShipmentStatusUseCase,
+    FirstFitDecreasingService,
+    AssignVehiclesUseCase,
   ],
   controllers: [ShipmentsController],
   exports: [SHIPMENT_REPOSITORY, SHIPMENT_EVENT_REPOSITORY],
