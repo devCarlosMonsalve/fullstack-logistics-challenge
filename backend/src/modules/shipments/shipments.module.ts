@@ -15,6 +15,7 @@ import { UpdateShipmentStatusUseCase } from './application/use-cases/update-ship
 import { FirstFitDecreasingService } from './domain/services/first-fit-decreasing.service';
 import { AssignVehiclesUseCase } from './application/use-cases/assign-vehicles.use-case';
 import { CancelShipmentUseCase } from './application/use-cases/cancel-shipment.use-case';
+import { GetPublicTrackingUseCase } from './application/use-cases/get-public-tracking.use-case';
 import { ShipmentsController } from './shipments.controller';
 import { AuthModule } from '../auth/auth.module';
 
@@ -36,6 +37,7 @@ import { AuthModule } from '../auth/auth.module';
     FirstFitDecreasingService,
     AssignVehiclesUseCase,
     CancelShipmentUseCase,
+    GetPublicTrackingUseCase,
   ],
   controllers: [ShipmentsController],
   exports: [SHIPMENT_REPOSITORY, SHIPMENT_EVENT_REPOSITORY],

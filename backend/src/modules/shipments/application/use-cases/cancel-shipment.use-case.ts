@@ -15,7 +15,7 @@ import { ShipmentEvent } from '../../domain/entities/shipment-event.entity';
 import { ShipmentStatus } from '../../domain/shipment-status';
 
 @Injectable()
-    export class CancelShipmentUseCase {
+export class CancelShipmentUseCase {
     constructor(
         @Inject(SHIPMENT_REPOSITORY)
         private readonly shipmentRepository: ShipmentRepository,
