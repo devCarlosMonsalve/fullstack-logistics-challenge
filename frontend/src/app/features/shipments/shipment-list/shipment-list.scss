@@ -36,7 +36,9 @@ mat-card-content {
 
 .filters {
   display: flex;
+  align-items: center;
   justify-content: flex-end;
+  gap: 1rem;
   margin-bottom: 1.25rem;
 }
 
@@ -130,5 +132,10 @@ td a {
 
   .filters mat-form-field {
     width: 100%;
+  }
+
+  .filters {
+    align-items: stretch;
+    flex-direction: column-reverse;
   }
 }

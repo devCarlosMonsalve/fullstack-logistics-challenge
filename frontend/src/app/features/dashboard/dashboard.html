@@ -1,0 +1,56 @@
+<main class="dashboard-page">
+  <header>
+    <div>
+      <p class="eyebrow">Supervisor overview</p>
+      <h1>Dashboard</h1>
+      <p>Shipment statuses for the currently fetched page.</p>
+    </div>
+    <button mat-stroked-button type="button" (click)="loadSummary()">
+      <mat-icon>refresh</mat-icon>
+      Refresh
+    </button>
+  </header>
+
+  @if (isLoading()) {
+    <div class="state" role="status" aria-live="polite">
+      <mat-spinner diameter="40"></mat-spinner>
+      <span>Loading shipment summary…</span>
+    </div>
+  } @else if (errorMessage(); as message) {
+    <mat-card appearance="outlined" class="state error-state" role="alert">
+      <mat-card-content>
+        <p>{{ message }}</p>
+        <button mat-stroked-button type="button" (click)="loadSummary()">
+          Try again
+        </button>
+      </mat-card-content>
+    </mat-card>
+  } @else {
+    <section class="overview" aria-label="Shipment overview">
+      <mat-card appearance="outlined" class="total-card">
+        <mat-card-content>
+          <mat-icon aria-hidden="true">inventory_2</mat-icon>
+          <div>
+            <strong>{{ total() }}</strong>
+            <span>Total shipments</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <p class="scope-note">
+        Status counts below cover {{ shipments().length }} shipments on page
+        {{ page() }}, not all {{ total() }} shipments.
+      </p>
+    </section>
+
+    <section class="status-grid" aria-label="Current page status summary">
+      @for (item of statusSummary(); track item.status) {
+        <mat-card appearance="outlined">
+          <mat-card-content>
+            <span class="status-label">{{ formatStatus(item.status) }}</span>
+            <strong>{{ item.count }}</strong>
+          </mat-card-content>
+        </mat-card>
+      }
+    </section>
+  }
+</main>

@@ -39,7 +39,7 @@ export class App {
   private readonly breakpointObserver = inject(BreakpointObserver);
 
   protected readonly currentUser = signal<AuthenticatedUser | null>(null);
-  protected readonly isShipmentRoute = signal(false);
+  protected readonly isAuthenticatedRoute = signal(false);
   protected readonly mobileNavigationOpen = signal(false);
   protected readonly isHandset = toSignal(
     this.breakpointObserver
@@ -48,7 +48,7 @@ export class App {
     { initialValue: false },
   );
   protected readonly showAuthenticatedShell = computed(
-    () => this.isShipmentRoute() && this.currentUser() !== null,
+    () => this.isAuthenticatedRoute() && this.currentUser() !== null,
   );
   protected readonly isSupervisor = computed(
     () => this.currentUser()?.role === 'SUPERVISOR',
@@ -85,7 +85,9 @@ export class App {
   }
 
   private syncShell(url: string): void {
-    this.isShipmentRoute.set(/^\/shipments(?:\/|$)/.test(url));
+    this.isAuthenticatedRoute.set(
+      /^\/(?:shipments|dashboard|register)(?:\/|$)/.test(url),
+    );
     this.currentUser.set(this.authService.getCurrentUser());
   }
 }

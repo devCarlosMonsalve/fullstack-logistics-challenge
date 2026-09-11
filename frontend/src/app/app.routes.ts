@@ -16,6 +16,12 @@ export const routes: Routes = [
         import('./features/auth/register/register').then((m) => m.Register),
     },
     {
+        path: 'dashboard',
+        canActivate: [authGuard, supervisorRoleGuard],
+        loadComponent: () =>
+        import('./features/dashboard/dashboard').then((m) => m.Dashboard),
+    },
+    {
         path: 'shipments',
         canActivate: [authGuard],
         loadComponent: () =>
@@ -30,6 +36,14 @@ export const routes: Routes = [
         import('./features/shipments/shipment-create/shipment-create').then(
             (m) => m.ShipmentCreate,
         ),
+    },
+    {
+        path: 'shipments/vehicle-assignment',
+        canActivate: [authGuard, supervisorRoleGuard],
+        loadComponent: () =>
+        import(
+            './features/shipments/vehicle-assignment/vehicle-assignment'
+        ).then((m) => m.VehicleAssignmentComponent),
     },
     {
         path: 'shipments/:id',

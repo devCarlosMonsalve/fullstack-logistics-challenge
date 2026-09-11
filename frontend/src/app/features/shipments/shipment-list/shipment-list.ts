@@ -5,6 +5,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
@@ -38,6 +39,7 @@ const SHIPMENT_STATUSES: readonly ShipmentStatus[] = [
     MatButtonModule,
     MatCardModule,
     MatFormFieldModule,
+    MatIconModule,
     MatPaginatorModule,
     MatProgressSpinnerModule,
     MatSelectModule,
@@ -112,9 +114,58 @@ export class ShipmentList implements OnInit {
       });
   }
 
+  protected exportCurrentPage(): void {
+    if (this.shipments().length === 0) {
+      return;
+    }
+
+    const rows: readonly (readonly CsvValue[])[] = [
+      [
+        'Tracking code',
+        'Recipient',
+        'Phone',
+        'Origin',
+        'Destination',
+        'Weight (kg)',
+        'Status',
+        'Created at',
+      ],
+      ...this.shipments().map((shipment) => [
+        shipment.trackingCode,
+        shipment.recipient,
+        shipment.phone ?? '',
+        shipment.origin,
+        shipment.destination,
+        shipment.weight,
+        shipment.status,
+        shipment.createdAt,
+      ]),
+    ];
+    const csv = rows.map((row) => row.map(escapeCsvCell).join(',')).join('\r\n');
+    const objectUrl = URL.createObjectURL(
+      new Blob([`\uFEFF${csv}`], { type: 'text/csv;charset=utf-8' }),
+    );
+    const link = document.createElement('a');
+    link.href = objectUrl;
+    link.download = `shipments-page-${this.pageIndex() + 1}.csv`;
+    link.click();
+    URL.revokeObjectURL(objectUrl);
+  }
+
   protected formatStatus(status: ShipmentStatus): string {
     return status.replaceAll('_', ' ');
   }
+}
+
+type CsvValue = string | number;
+
+function escapeCsvCell(value: CsvValue): string {
+  let text = String(value);
+  if (/^[=+\-@\t\r]/.test(text)) {
+    text = `'${text}`;
+  }
+
+  return `"${text.replaceAll('"', '""')}"`;
 }
 
 function getErrorMessage(error: unknown, action: string): string {

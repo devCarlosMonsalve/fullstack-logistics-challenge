@@ -1,0 +1,96 @@
+.assignment-page {
+  width: min(100% - 2rem, 62rem);
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+
+header {
+  margin: 1rem 0 1.5rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.25rem;
+  color: var(--mat-sys-primary);
+  font: var(--mat-sys-label-large);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+h1,
+header p,
+h2 {
+  margin-top: 0;
+}
+
+header p:last-child {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+mat-card-content {
+  padding: 1.5rem;
+}
+
+form {
+  display: grid;
+  gap: 1rem;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.form-actions button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.form-error {
+  margin: 0;
+  color: var(--mat-sys-error);
+}
+
+.results {
+  margin-top: 2rem;
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.summary mat-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.summary strong {
+  color: var(--mat-sys-primary);
+  font: var(--mat-sys-headline-small);
+}
+
+.summary span {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.vehicle-card {
+  margin-top: 1rem;
+}
+
+.vehicle-card table {
+  width: 100%;
+}
+
+@media (max-width: 37.5rem) {
+  .assignment-page {
+    padding: 1rem 0;
+  }
+
+  .summary {
+    grid-template-columns: 1fr;
+  }
+}

@@ -11,6 +11,15 @@
   <mat-card appearance="outlined">
     <mat-card-content>
       <div class="filters">
+        <button
+          mat-stroked-button
+          type="button"
+          [disabled]="shipments().length === 0 || isLoading()"
+          (click)="exportCurrentPage()"
+        >
+          <mat-icon>download</mat-icon>
+          Export current page
+        </button>
         <mat-form-field appearance="outline" subscriptSizing="dynamic">
           <mat-label>Filter by status</mat-label>
           <mat-select

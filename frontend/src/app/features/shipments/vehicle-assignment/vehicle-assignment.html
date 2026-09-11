@@ -1,0 +1,115 @@
+<main class="assignment-page">
+  <a mat-button routerLink="/shipments">← Back to shipments</a>
+
+  <header>
+    <p class="eyebrow">Supervisor tools</p>
+    <h1>Vehicle assignment</h1>
+    <p>Group selected shipments into vehicles by weight capacity.</p>
+  </header>
+
+  <mat-card appearance="outlined">
+    <mat-card-content>
+      <form [formGroup]="assignmentForm" (ngSubmit)="onSubmit()" novalidate>
+        <mat-form-field appearance="outline">
+          <mat-label>Shipment IDs</mat-label>
+          <textarea
+            matInput
+            rows="6"
+            formControlName="shipmentIds"
+            placeholder="UUIDs separated by commas or new lines"
+            aria-required="true"
+          ></textarea>
+          <mat-hint>Enter one or more shipment UUIDs.</mat-hint>
+          @if (assignmentForm.controls.shipmentIds.hasError('required')) {
+            <mat-error>At least one shipment ID is required.</mat-error>
+          } @else if (
+            assignmentForm.controls.shipmentIds.hasError('invalidShipmentIds')
+          ) {
+            <mat-error>Every shipment ID must be a valid UUID.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Vehicle capacity</mat-label>
+          <input
+            matInput
+            type="number"
+            min="0.01"
+            step="any"
+            formControlName="vehicleCapacity"
+            aria-required="true"
+          />
+          <span matTextSuffix>kg</span>
+          @if (assignmentForm.controls.vehicleCapacity.hasError('required')) {
+            <mat-error>Vehicle capacity is required.</mat-error>
+          } @else if (assignmentForm.controls.vehicleCapacity.hasError('min')) {
+            <mat-error>Vehicle capacity must be greater than zero.</mat-error>
+          }
+        </mat-form-field>
+
+        @if (errorMessage(); as message) {
+          <p class="form-error" role="alert">{{ message }}</p>
+        }
+
+        <div class="form-actions">
+          <button mat-flat-button type="submit" [disabled]="isSubmitting()">
+            @if (isSubmitting()) {
+              <mat-spinner diameter="20" aria-label="Assigning vehicles"></mat-spinner>
+              Assigning…
+            } @else {
+              Assign vehicles
+            }
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  @if (result(); as assignment) {
+    <section class="results" aria-live="polite">
+      <h2>Assignment result</h2>
+      <div class="summary">
+        <mat-card appearance="outlined">
+          <mat-card-content>
+            <strong>{{ assignment.totalVehiclesUsed }}</strong>
+            <span>Vehicles used</span>
+          </mat-card-content>
+        </mat-card>
+        <mat-card appearance="outlined">
+          <mat-card-content>
+            <strong>{{ assignment.totalWeight }} kg</strong>
+            <span>Total shipment weight</span>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      @for (vehicle of assignment.vehicles; track vehicle.vehicleNumber) {
+        <mat-card appearance="outlined" class="vehicle-card">
+          <mat-card-header>
+            <mat-card-title>Vehicle {{ vehicle.vehicleNumber }}</mat-card-title>
+            <mat-card-subtitle>
+              {{ vehicle.totalWeight }} kg loaded ·
+              {{ vehicle.remainingCapacity }} kg remaining
+            </mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <table mat-table [dataSource]="vehicle.shipments">
+              <ng-container matColumnDef="trackingCode">
+                <th mat-header-cell *matHeaderCellDef>Tracking code</th>
+                <td mat-cell *matCellDef="let shipment">
+                  {{ shipment.trackingCode }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="weight">
+                <th mat-header-cell *matHeaderCellDef>Weight</th>
+                <td mat-cell *matCellDef="let shipment">{{ shipment.weight }} kg</td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            </table>
+          </mat-card-content>
+        </mat-card>
+      }
+    </section>
+  }
+</main>

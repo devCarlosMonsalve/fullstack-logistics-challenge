@@ -74,7 +74,30 @@
 
           @if (isSupervisor()) {
             <div class="navigation-section">Administration</div>
-            <a mat-list-item routerLink="/register" (click)="closeMobileNavigation()">
+            <a
+              mat-list-item
+              routerLink="/dashboard"
+              routerLinkActive="active-link"
+              (click)="closeMobileNavigation()"
+            >
+              <mat-icon matListItemIcon>dashboard</mat-icon>
+              <span matListItemTitle>Dashboard</span>
+            </a>
+            <a
+              mat-list-item
+              routerLink="/shipments/vehicle-assignment"
+              routerLinkActive="active-link"
+              (click)="closeMobileNavigation()"
+            >
+              <mat-icon matListItemIcon>rv_hookup</mat-icon>
+              <span matListItemTitle>Vehicle assignment</span>
+            </a>
+            <a
+              mat-list-item
+              routerLink="/register"
+              routerLinkActive="active-link"
+              (click)="closeMobileNavigation()"
+            >
               <mat-icon matListItemIcon>person_add</mat-icon>
               <span matListItemTitle>Register user</span>
             </a>
