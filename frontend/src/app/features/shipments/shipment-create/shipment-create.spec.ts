@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
+import { FormGroup } from '@angular/forms';
 import { provideRouter } from '@angular/router';
 
 import { ShipmentCreate } from './shipment-create';
@@ -21,5 +22,21 @@ describe('ShipmentCreate', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('allows a zero shipment weight', () => {
+    const form = Reflect.get(component, 'shipmentForm') as FormGroup;
+
+    form.get('weight')?.setValue(0);
+
+    expect(form.get('weight')?.valid).toBe(true);
+  });
+
+  it('rejects a negative shipment weight', () => {
+    const form = Reflect.get(component, 'shipmentForm') as FormGroup;
+
+    form.get('weight')?.setValue(-0.01);
+
+    expect(form.get('weight')?.hasError('nonNegative')).toBe(true);
   });
 });

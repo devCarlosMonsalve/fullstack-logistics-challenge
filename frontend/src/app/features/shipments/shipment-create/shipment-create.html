@@ -72,8 +72,8 @@
             <span matTextSuffix>kg</span>
             @if (shipmentForm.controls.weight.hasError('required')) {
               <mat-error>Weight is required.</mat-error>
-            } @else if (shipmentForm.controls.weight.hasError('positive')) {
-              <mat-error>Weight must be greater than 0.</mat-error>
+            } @else if (shipmentForm.controls.weight.hasError('nonNegative')) {
+              <mat-error>Weight must be 0 or greater.</mat-error>
             }
           </mat-form-field>
         </div>

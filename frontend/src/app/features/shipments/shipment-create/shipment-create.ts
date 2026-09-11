@@ -55,7 +55,7 @@ export class ShipmentCreate {
     }),
     phone: new FormControl('', { nonNullable: true }),
     weight: new FormControl<number | null>(null, {
-      validators: [Validators.required, positiveNumber],
+      validators: [Validators.required, nonNegativeNumber],
     }),
   });
   protected readonly isSubmitting = signal(false);
@@ -96,12 +96,12 @@ export class ShipmentCreate {
   }
 }
 
-function positiveNumber(
+function nonNegativeNumber(
   control: AbstractControl<number | null>,
 ): ValidationErrors | null {
-  return control.value !== null && control.value > 0
+  return control.value !== null && control.value >= 0
     ? null
-    : { positive: true };
+    : { nonNegative: true };
 }
 
 function nonBlank(control: AbstractControl<string>): ValidationErrors | null {
