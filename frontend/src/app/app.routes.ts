@@ -1,5 +1,8 @@
 import { Routes } from '@angular/router';
 
+import { authGuard } from './core/guards/auth.guard';
+import { supervisorRoleGuard } from './core/guards/supervisor-role.guard';
+
 export const routes: Routes = [
     {
         path: 'login',
@@ -8,11 +11,13 @@ export const routes: Routes = [
     },
     {
         path: 'register',
+        canActivate: [authGuard, supervisorRoleGuard],
         loadComponent: () =>
         import('./features/auth/register/register').then((m) => m.Register),
     },
     {
         path: 'shipments',
+        canActivate: [authGuard],
         loadComponent: () =>
         import('./features/shipments/shipment-list/shipment-list').then(
             (m) => m.ShipmentList,
@@ -20,6 +25,7 @@ export const routes: Routes = [
     },
     {
         path: 'shipments/create',
+        canActivate: [authGuard],
         loadComponent: () =>
         import('./features/shipments/shipment-create/shipment-create').then(
             (m) => m.ShipmentCreate,
@@ -27,6 +33,7 @@ export const routes: Routes = [
     },
     {
         path: 'shipments/:id',
+        canActivate: [authGuard],
         loadComponent: () =>
         import('./features/shipments/shipment-detail/shipment-detail').then(
             (m) => m.ShipmentDetail,
