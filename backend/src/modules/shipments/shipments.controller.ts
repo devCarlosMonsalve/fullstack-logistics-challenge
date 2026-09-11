@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { Query } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateShipmentUseCase } from './application/use-cases/create-shipment.use-case';
 import { CreateShipmentDto } from './application/dto/create-shipment.dto';
 import { ListShipmentsQueryDto } from './application/dto/list-shipments-query.dto';
@@ -23,6 +24,8 @@ import { AssignVehiclesUseCase } from './application/use-cases/assign-vehicles.u
 import { AssignVehiclesDto } from './application/dto/assign-vehicles.dto';
 import { CancelShipmentUseCase } from './application/use-cases/cancel-shipment.use-case';
 
+@ApiTags('shipments')
+@ApiBearerAuth('access-token')
 @Controller('shipments')
 export class ShipmentsController {
     constructor(
@@ -34,6 +37,7 @@ export class ShipmentsController {
         private readonly cancelShipmentUseCase: CancelShipmentUseCase,
     ) {}
 
+    @ApiOperation({ summary: 'Create a new shipment' })
     @UseGuards(JwtAuthGuard)
     @Post()
     async create(
@@ -48,6 +52,7 @@ export class ShipmentsController {
     }
 
     @UseGuards(JwtAuthGuard)
+    @ApiOperation({ summary: 'Assign vehicles to shipments' })
     @Post('assign-vehicles')
     async assignVehicles(
         @Body() body: AssignVehiclesDto,
@@ -59,6 +64,7 @@ export class ShipmentsController {
     }
 
     @UseGuards(JwtAuthGuard)
+    @ApiOperation({ summary: 'List all shipments' })
     @Get()
     async findAll(@Query() query: ListShipmentsQueryDto) {
         return this.listShipmentsUseCase.execute({
@@ -69,12 +75,14 @@ export class ShipmentsController {
     }
 
     @UseGuards(JwtAuthGuard)
+    @ApiOperation({ summary: 'Get a shipment by ID' })
     @Get(':id')
     async findOne(@Param('id') id: string) {
         return this.getShipmentUseCase.execute(id);
     }
     
     @UseGuards(JwtAuthGuard)
+    @ApiOperation({ summary: 'Update the status of a shipment' })
     @Patch(':id/status')
     async updateStatus(
         @Param('id') id: string,
@@ -91,6 +99,7 @@ export class ShipmentsController {
     }
     
     @UseGuards(JwtAuthGuard)
+    @ApiOperation({ summary: 'Cancel a shipment' })
     @Delete(':id')
     async cancel(
         @Param('id') id: string,
