@@ -1,1 +1,106 @@
-<p>shipment-list works!</p>
+<main class="shipments-page">
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">Logistics</p>
+      <h1>Shipments</h1>
+      <p class="subtitle">Review and manage all shipments.</p>
+    </div>
+    <a mat-flat-button routerLink="/shipments/create">Create shipment</a>
+  </header>
+
+  <mat-card appearance="outlined">
+    <mat-card-content>
+      <div class="filters">
+        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+          <mat-label>Filter by status</mat-label>
+          <mat-select
+            [formControl]="statusFilter"
+            (selectionChange)="onFilterChange()"
+            aria-label="Filter shipments by status"
+          >
+            <mat-option value="">All statuses</mat-option>
+            @for (status of statuses; track status) {
+              <mat-option [value]="status">{{ formatStatus(status) }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      @if (isLoading()) {
+        <div class="state" role="status" aria-live="polite">
+          <mat-spinner diameter="40"></mat-spinner>
+          <span>Loading shipments…</span>
+        </div>
+      } @else if (errorMessage(); as message) {
+        <div class="state error-state" role="alert">
+          <p>{{ message }}</p>
+          <button mat-stroked-button type="button" (click)="loadShipments()">
+            Try again
+          </button>
+        </div>
+      } @else {
+        @if (shipments().length === 0) {
+          <div class="state" role="status">
+            <h2>No shipments found</h2>
+            <p>Try another status or create a shipment.</p>
+          </div>
+        } @else {
+          <div class="table-wrapper">
+            <table mat-table [dataSource]="shipments()">
+              <caption class="visually-hidden">
+                Shipment results
+              </caption>
+
+              <ng-container matColumnDef="trackingCode">
+                <th mat-header-cell *matHeaderCellDef>Tracking code</th>
+                <td mat-cell *matCellDef="let shipment">
+                  <a [routerLink]="['/shipments', shipment.id]">
+                    {{ shipment.trackingCode }}
+                  </a>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="recipient">
+                <th mat-header-cell *matHeaderCellDef>Recipient</th>
+                <td mat-cell *matCellDef="let shipment">{{ shipment.recipient }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="destination">
+                <th mat-header-cell *matHeaderCellDef>Destination</th>
+                <td mat-cell *matCellDef="let shipment">{{ shipment.destination }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef>Status</th>
+                <td mat-cell *matCellDef="let shipment">
+                  <span class="status" [attr.data-status]="shipment.status">
+                    {{ formatStatus(shipment.status) }}
+                  </span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="createdAt">
+                <th mat-header-cell *matHeaderCellDef>Created</th>
+                <td mat-cell *matCellDef="let shipment">
+                  {{ shipment.createdAt | date: 'medium' }}
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            </table>
+          </div>
+        }
+
+        <mat-paginator
+          [length]="total()"
+          [pageIndex]="pageIndex()"
+          [pageSize]="pageSize()"
+          [pageSizeOptions]="[5, 10, 25, 50]"
+          (page)="onPageChange($event)"
+          aria-label="Select shipment results page"
+        ></mat-paginator>
+      }
+    </mat-card-content>
+  </mat-card>
+</main>

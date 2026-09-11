@@ -1,1 +1,99 @@
-<p>shipment-create works!</p>
+<main class="shipment-form-page">
+  <a mat-button routerLink="/shipments">← Back to shipments</a>
+
+  <mat-card appearance="outlined">
+    <mat-card-header>
+      <mat-card-title><h1>Create shipment</h1></mat-card-title>
+      <mat-card-subtitle>Enter the shipment and recipient details.</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="shipmentForm" (ngSubmit)="onSubmit()" novalidate>
+        <div class="form-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Origin</mat-label>
+            <input
+              matInput
+              formControlName="origin"
+              autocomplete="street-address"
+              aria-required="true"
+            />
+            @if (shipmentForm.controls.origin.hasError('required')) {
+              <mat-error>Origin is required.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Destination</mat-label>
+            <input
+              matInput
+              formControlName="destination"
+              autocomplete="street-address"
+              aria-required="true"
+            />
+            @if (shipmentForm.controls.destination.hasError('required')) {
+              <mat-error>Destination is required.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Recipient</mat-label>
+            <input
+              matInput
+              formControlName="recipient"
+              autocomplete="name"
+              aria-required="true"
+            />
+            @if (shipmentForm.controls.recipient.hasError('required')) {
+              <mat-error>Recipient is required.</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Phone (optional)</mat-label>
+            <input
+              matInput
+              type="tel"
+              formControlName="phone"
+              autocomplete="tel"
+            />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="weight-field">
+            <mat-label>Weight</mat-label>
+            <input
+              matInput
+              type="number"
+              min="0"
+              step="any"
+              formControlName="weight"
+              aria-required="true"
+            />
+            <span matTextSuffix>kg</span>
+            @if (shipmentForm.controls.weight.hasError('required')) {
+              <mat-error>Weight is required.</mat-error>
+            } @else if (shipmentForm.controls.weight.hasError('positive')) {
+              <mat-error>Weight must be greater than 0.</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        @if (errorMessage(); as message) {
+          <p class="form-error" role="alert">{{ message }}</p>
+        }
+
+        <div class="form-actions">
+          <a mat-button routerLink="/shipments">Cancel</a>
+          <button mat-flat-button type="submit" [disabled]="isSubmitting()">
+            @if (isSubmitting()) {
+              <mat-spinner diameter="20" aria-label="Creating shipment"></mat-spinner>
+              <span>Creating…</span>
+            } @else {
+              <span>Create shipment</span>
+            }
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</main>
