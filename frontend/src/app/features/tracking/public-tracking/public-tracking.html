@@ -1,1 +1,164 @@
-<p>public-tracking works!</p>
+<main class="tracking-page">
+  <header class="hero">
+    <p class="eyebrow">Shipment tracking</p>
+    <h1>Track your shipment</h1>
+    <p class="intro">
+      Enter the tracking code provided with your shipment to see its latest
+      status and journey.
+    </p>
+
+    <form class="tracking-form" (ngSubmit)="submit()" novalidate>
+      <mat-form-field appearance="outline">
+        <mat-label>Tracking code</mat-label>
+        <input
+          matInput
+          [formControl]="trackingCode"
+          autocomplete="off"
+          autocapitalize="characters"
+          spellcheck="false"
+          maxlength="17"
+          placeholder="ENV-YYYYMMDD-XXXX"
+          aria-required="true"
+        />
+        <mat-hint>Example: ENV-20260911-A1B2</mat-hint>
+        @if (trackingCode.hasError('required')) {
+          <mat-error>Tracking code is required.</mat-error>
+        } @else if (trackingCode.hasError('pattern')) {
+          <mat-error>
+            Enter a code in the format ENV-YYYYMMDD-XXXX.
+          </mat-error>
+        }
+      </mat-form-field>
+
+      <button mat-flat-button type="submit" [disabled]="isLoading()">
+        Track shipment
+      </button>
+    </form>
+  </header>
+
+  <section
+    class="tracking-result"
+    aria-label="Tracking result"
+    [attr.aria-busy]="isLoading()"
+  >
+    @if (isLoading()) {
+      <div class="page-state" role="status" aria-live="polite">
+        <mat-spinner diameter="44"></mat-spinner>
+        <span>Looking up your shipment…</span>
+      </div>
+    } @else if (errorMessage(); as message) {
+      <mat-card class="feedback-card error-state" appearance="outlined">
+        <mat-card-content>
+          <div role="alert">
+            <h2>Tracking information unavailable</h2>
+            <p>{{ message }}</p>
+          </div>
+          <button mat-stroked-button type="button" (click)="retry()">
+            Try again
+          </button>
+        </mat-card-content>
+      </mat-card>
+    } @else if (detail(); as trackingDetail) {
+      <div class="result-header">
+        <div>
+          <p class="eyebrow">Tracking code</p>
+          <h2>{{ trackingDetail.shipment.trackingCode }}</h2>
+        </div>
+        <div class="current-status">
+          <span>Current status</span>
+          <strong [attr.data-status]="trackingDetail.shipment.status">
+            {{ formatStatus(trackingDetail.shipment.status) }}
+          </strong>
+        </div>
+      </div>
+
+      <mat-card class="shipment-card" appearance="outlined">
+        <mat-card-header>
+          <mat-card-title><h3>Shipment information</h3></mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <dl class="shipment-details">
+            <div>
+              <dt>Origin</dt>
+              <dd>{{ trackingDetail.shipment.origin }}</dd>
+            </div>
+            <div>
+              <dt>Destination</dt>
+              <dd>{{ trackingDetail.shipment.destination }}</dd>
+            </div>
+            <div>
+              <dt>Recipient</dt>
+              <dd>{{ trackingDetail.shipment.recipient }}</dd>
+            </div>
+            <div>
+              <dt>Weight</dt>
+              <dd>{{ trackingDetail.shipment.weight | number }} kg</dd>
+            </div>
+            <div>
+              <dt>Shipment created</dt>
+              <dd>
+                {{ trackingDetail.shipment.createdAt | date: 'medium' }}
+              </dd>
+            </div>
+            <div>
+              <dt>Last updated</dt>
+              <dd>
+                {{ trackingDetail.shipment.updatedAt | date: 'medium' }}
+              </dd>
+            </div>
+            @if (trackingDetail.shipment.deliveredAt) {
+              <div>
+                <dt>Delivered</dt>
+                <dd>
+                  {{ trackingDetail.shipment.deliveredAt | date: 'medium' }}
+                </dd>
+              </div>
+            }
+          </dl>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="timeline-card" appearance="outlined">
+        <mat-card-header>
+          <mat-card-title><h3>Shipment journey</h3></mat-card-title>
+          <mat-card-subtitle>
+            Complete tracking history, from earliest to latest
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          @if (trackingDetail.events.length === 0) {
+            <p class="empty-events" role="status">
+              No tracking events are available yet.
+            </p>
+          } @else {
+            <ol class="timeline" aria-label="Shipment events">
+              @for (
+                event of trackingDetail.events;
+                track event.id;
+                let last = $last
+              ) {
+                <li [class.latest-event]="last">
+                  <div class="timeline-marker" aria-hidden="true"></div>
+                  <div class="event-content">
+                    <div class="event-heading">
+                      <strong>{{ formatStatus(event.status) }}</strong>
+                      <time [attr.datetime]="event.timestamp">
+                        {{ event.timestamp | date: 'medium' }}
+                      </time>
+                    </div>
+                    @if (event.location) {
+                      <p><span>Location:</span> {{ event.location }}</p>
+                    }
+                    @if (event.notes) {
+                      <p><span>Notes:</span> {{ event.notes }}</p>
+                    }
+                  </div>
+                </li>
+              }
+            </ol>
+          }
+        </mat-card-content>
+      </mat-card>
+    }
+  </section>
+</main>
