@@ -1,0 +1,55 @@
+.auth-page {
+  display: grid;
+  min-height: 100%;
+  box-sizing: border-box;
+  place-items: center;
+  padding: 2rem 1rem;
+  background:
+    radial-gradient(
+      circle at top left,
+      color-mix(in srgb, var(--mat-sys-primary) 14%, transparent),
+      transparent 42%
+    ),
+    var(--mat-sys-surface-container-low);
+}
+
+.auth-card {
+  width: min(100%, 32rem);
+  padding: 1rem;
+  box-shadow: var(--mat-sys-level2);
+}
+
+mat-card-header {
+  margin-bottom: 1.5rem;
+}
+
+h1 {
+  margin: 0 0 0.25rem;
+  font: var(--mat-sys-headline-medium);
+}
+
+form {
+  display: grid;
+  gap: 0.75rem;
+}
+
+mat-form-field,
+.submit-button {
+  width: 100%;
+}
+
+.form-error {
+  margin: 0 0 0.25rem;
+  color: var(--mat-sys-error);
+  font: var(--mat-sys-body-medium);
+}
+
+.submit-button {
+  min-height: 2.75rem;
+}
+
+.submit-button mat-spinner {
+  display: inline-block;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
