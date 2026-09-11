@@ -47,6 +47,7 @@ describe('UpdateShipmentStatusUseCase', () => {
     });
 
     it('should update shipment status and create event', async () => {
+        const previousUpdatedAt = new Date('2020-01-01T00:00:00.000Z');
         const shipment = new Shipment(
             'shipment-1',
             'ENV-20260911-TEST',
@@ -59,7 +60,7 @@ describe('UpdateShipmentStatusUseCase', () => {
             null,
             'user-1',
             new Date(),
-            new Date(),
+            previousUpdatedAt,
         );
 
         shipmentRepository.findById.mockResolvedValue(shipment);
@@ -73,6 +74,9 @@ describe('UpdateShipmentStatusUseCase', () => {
         expect(shipmentRepository.update).toHaveBeenCalledWith(shipment);
 
         expect(shipmentEventRepository.create).toHaveBeenCalled();
+        expect(shipment.updatedAt.getTime()).toBeGreaterThan(
+            previousUpdatedAt.getTime(),
+        );
     });
 
     it('should allow cancellation from IN_TRANSIT', async () => {

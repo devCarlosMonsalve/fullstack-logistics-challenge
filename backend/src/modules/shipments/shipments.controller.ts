@@ -23,6 +23,8 @@ import { UpdateShipmentStatusDto } from './application/dto/update-shipment-statu
 import { AssignVehiclesUseCase } from './application/use-cases/assign-vehicles.use-case';
 import { AssignVehiclesDto } from './application/dto/assign-vehicles.dto';
 import { CancelShipmentUseCase } from './application/use-cases/cancel-shipment.use-case';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { RolesGuard } from '../auth/guards/roles.guard';
 
 @ApiTags('shipments')
 @ApiBearerAuth('access-token')
@@ -51,7 +53,8 @@ export class ShipmentsController {
         });
     }
 
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles('SUPERVISOR')
     @ApiOperation({ summary: 'Assign vehicles to shipments' })
     @Post('assign-vehicles')
     async assignVehicles(

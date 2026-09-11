@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import type { PasswordHasher } from '../../../users/application/password-hasher';
 import type { UserRepository } from '../../../users/domain/repositories/user.repository';
 import { USER_REPOSITORY } from '../../../users/domain/repositories/user.repository';
@@ -23,7 +23,7 @@ export class LoginUseCase {
   async execute(input: LoginInput){
     const user = await this.userRepository.findByEmail(input.email);
     if (!user) {
-      throw new Error('Invalid credentials');
+      throw new UnauthorizedException('Invalid credentials');
     }
 
     const isPasswordValid = await this.passwordHasher.compare(
@@ -31,7 +31,7 @@ export class LoginUseCase {
       user.passwordHash,
     );
     if (!isPasswordValid) {
-      throw new Error('Invalid credentials');
+      throw new UnauthorizedException('Invalid credentials');
     }
 
     const accessToken = await this.jwtService.signAsync({

@@ -31,6 +31,35 @@
 $ npm install
 ```
 
+Copy or create `.env` and configure the API:
+
+```dotenv
+DATABASE_URL=postgresql://logistics:logistics_dev@localhost:5432/logistics_db
+JWT_SECRET=replace-with-a-long-random-secret
+# Comma-separated browser origins; defaults to the local Angular dev server.
+CORS_ORIGINS=http://localhost:4200
+```
+
+## Bootstrap the first supervisor
+
+Registration is supervisor-only. After applying the Prisma migrations, bootstrap the
+first supervisor with environment variables so the password is bcrypt-hashed rather
+than stored directly:
+
+```dotenv
+SUPERVISOR_NAME=Local Supervisor
+SUPERVISOR_EMAIL=supervisor@example.com
+SUPERVISOR_PASSWORD=replace-with-at-least-8-characters
+```
+
+```bash
+$ npm run seed:supervisor
+```
+
+The command is idempotent for `SUPERVISOR_EMAIL`: an existing supervisor is left
+unchanged. It fails instead of silently promoting an existing operator with that
+email.
+
 ## Compile and run the project
 
 ```bash

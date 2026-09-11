@@ -58,6 +58,7 @@ export class UpdateShipmentStatusUseCase {
         }
 
         shipment.status = input.status;
+        shipment.updatedAt = new Date();
 
         if(input.status === ShipmentStatus.DELIVERED){
             shipment.deliveredAt = new Date();

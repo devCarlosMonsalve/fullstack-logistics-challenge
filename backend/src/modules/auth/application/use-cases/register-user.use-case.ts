@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { ConflictException, Inject, Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 
 import { USER_REPOSITORY } from '../../../users/domain/repositories/user.repository';
@@ -28,7 +28,7 @@ export class RegisterUserUseCase {
     async execute(input: RegisterUserInput): Promise<void> {
         const existingUser = await this.userRepository.findByEmail(input.email);
         if (existingUser) {
-            throw new Error('User with this email already exists');
+            throw new ConflictException('User with this email already exists');
         }
         const passwordHash = await this.passwordHasher.hash(input.password);
         const now = new Date();
